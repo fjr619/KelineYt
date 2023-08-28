@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1091644021000",
+    "project_id": "kelineyt-ffb85",
+    "storage_bucket": "kelineyt-ffb85.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091644021000:android:ddded16f1071351b8d74bd",
+        "android_client_info": {
+          "package_name": "com.example.kelineyt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091644021000-nmv209cj5m8p8483f385nkgj1soma7ha.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTEFNeomFYKPaaAVa1y7BHgBhpBigpcEQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091644021000-nmv209cj5m8p8483f385nkgj1soma7ha.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
