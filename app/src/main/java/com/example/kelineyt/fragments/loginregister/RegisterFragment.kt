@@ -1,5 +1,6 @@
 package com.example.kelineyt.fragments.loginregister
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,14 +8,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.kelineyt.R
 import com.example.kelineyt.data.User
 import com.example.kelineyt.databinding.FragmentRegisterBinding
+import com.example.kelineyt.util.RegisterFieldsState
+import com.example.kelineyt.util.RegisterValidation
 import com.example.kelineyt.util.Resource
 import com.example.kelineyt.viewmodel.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RegisterFragment: Fragment() {
@@ -46,24 +53,50 @@ class RegisterFragment: Fragment() {
             }
         }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.register.collect {
-                when(it) {
-                    is Resource.Loading -> {
-                        binding.buttonRegisterRegister.startAnimation()
-                        isEnabledForm(false)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.register.collect {
+                    when(it) {
+                        is Resource.Loading -> {
+                            binding.buttonRegisterRegister.startAnimation()
+                            isEnabledForm(false)
+                        }
+                        is Resource.Success -> {
+                            Log.d("test","success ${it.data?.email}")
+                            binding.buttonRegisterRegister.revertAnimation()
+                            isEnabledForm(true)
+                        }
+                        is Resource.Error -> {
+                            Log.d("test","error ${it.message.toString()}")
+                            binding.buttonRegisterRegister.revertAnimation()
+                            isEnabledForm(true)
+                        }
+                        else -> Unit
                     }
-                    is Resource.Success -> {
-                        Log.d("test","success ${it.data.toString()}")
-                        binding.buttonRegisterRegister.revertAnimation()
-                        isEnabledForm(true)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.validation.collect { validation ->
+                    if (validation.email is RegisterValidation.Failed) {
+                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                            binding.edEmailRegister.apply {
+                                requestFocus()
+                                error = validation.email.message
+                            }
+                        }
                     }
-                    is Resource.Error -> {
-                        Log.d("test","error ${it.message.toString()}")
-                        binding.buttonRegisterRegister.revertAnimation()
-                        isEnabledForm(true)
+
+                    if (validation.password is RegisterValidation.Failed) {
+                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                            binding.edPasswordRegister.apply {
+                                requestFocus()
+                                error = validation.password.message
+                            }
+                        }
                     }
-                    else -> Unit
                 }
             }
         }
