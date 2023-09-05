@@ -2,6 +2,7 @@ package com.example.kelineyt.fragments.loginregister
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +16,13 @@ import androidx.navigation.fragment.findNavController
 import com.example.kelineyt.R
 import com.example.kelineyt.activities.ShoppingActivity
 import com.example.kelineyt.databinding.FragmentLoginBinding
+import com.example.kelineyt.dialog.setupBottomSheetDialog
 import com.example.kelineyt.util.Resource
 import com.example.kelineyt.viewmodel.LoginViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -50,6 +54,12 @@ class LoginFragment: Fragment(R.layout.fragment_login) {
             }
         }
 
+        binding.tvForgotPasswordLogin.setOnClickListener {
+            setupBottomSheetDialog(onSendClick = {
+                viewModel.resetPassword(it)
+            })
+        }
+
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.login.collect {
@@ -74,5 +84,33 @@ class LoginFragment: Fragment(R.layout.fragment_login) {
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.resetPassword.collect {
+                    when (it) {
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            Snackbar.make(
+                                requireView(),
+                                "Reset link was sent to your email",
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                        }
+
+                        is Resource.Error -> {
+                            Snackbar.make(
+                                requireView(),
+                                "Error: ${it.message}",
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                        }
+
+                        else -> Unit
+                    }
+                }
+            }
+        }
+
     }
 }
