@@ -15,7 +15,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -28,10 +31,10 @@ class RegisterViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _register = MutableStateFlow<Resource<User>>(Resource.Unspecified())
-    val register: Flow<Resource<User>> = _register
+    val register = _register.asStateFlow()
 
-    private val _validation = Channel<RegisterFieldsState>()
-    val validation = _validation.receiveAsFlow()
+    private val _validation = MutableSharedFlow<RegisterFieldsState>()
+    val validation = _validation.asSharedFlow()
 
     fun createAccountWithEmailAndPassword(user: User, password: String) {
         val checkValidation = checkValidation(user, password)
@@ -50,7 +53,7 @@ class RegisterViewModel @Inject constructor(
         } else {
             val registerFieldsState = checkValidation.second
             viewModelScope.launch {
-                _validation.send(registerFieldsState)
+                _validation.emit(registerFieldsState)
             }
         }
     }

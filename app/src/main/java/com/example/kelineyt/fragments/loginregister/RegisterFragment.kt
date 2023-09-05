@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.example.kelineyt.R
 import com.example.kelineyt.data.User
 import com.example.kelineyt.databinding.FragmentRegisterBinding
@@ -40,6 +41,11 @@ class RegisterFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.tvDoYouHaveAccount.setOnClickListener {
+            findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+        }
+
         binding.apply {
             buttonRegisterRegister.setOnClickListener {
                 val user = User(
@@ -77,25 +83,21 @@ class RegisterFragment: Fragment() {
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.validation.collect { validation ->
                     if (validation.email is RegisterValidation.Failed) {
-                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
                             binding.edEmailRegister.apply {
                                 requestFocus()
                                 error = validation.email.message
                             }
-                        }
                     }
 
                     if (validation.password is RegisterValidation.Failed) {
-                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
                             binding.edPasswordRegister.apply {
                                 requestFocus()
                                 error = validation.password.message
                             }
-                        }
                     }
                 }
             }
