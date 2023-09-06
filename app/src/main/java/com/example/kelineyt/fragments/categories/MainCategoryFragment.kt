@@ -11,8 +11,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kelineyt.R
+import com.example.kelineyt.adapters.BestDealsAdapter
+import com.example.kelineyt.adapters.BestProductsAdapter
 import com.example.kelineyt.adapters.SpecialProductsAdapter
 import com.example.kelineyt.databinding.FragmentMainCategoryBinding
 import com.example.kelineyt.util.Resource
@@ -26,7 +29,15 @@ import kotlinx.coroutines.launch
 class MainCategoryFragment : Fragment(R.layout.fragment_main_category) {
 
     private lateinit var binding: FragmentMainCategoryBinding
-    private lateinit var specialProductsAdapter: SpecialProductsAdapter
+    private val specialProductsAdapter by lazy {
+        SpecialProductsAdapter()
+    }
+    private val bestDealsAdapter: BestDealsAdapter by lazy {
+        BestDealsAdapter()
+    }
+    private val bestProductsAdapter: BestProductsAdapter by lazy {
+        BestProductsAdapter()
+    }
     private val viewModel by viewModels<MainCategoryViewModel>()
 
     override fun onCreateView(
@@ -40,9 +51,12 @@ class MainCategoryFragment : Fragment(R.layout.fragment_main_category) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("TAG","onViewCreated")
         setupSpecialProductsRv()
+        setupBestDealsRv()
+        setupBestProducts()
 
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.specialProducts.collectLatest {
                     when(it) {
@@ -64,6 +78,53 @@ class MainCategoryFragment : Fragment(R.layout.fragment_main_category) {
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.bestDealsProducts.collectLatest {
+                    when (it) {
+                        is Resource.Loading -> {
+                            showLoading()
+                        }
+                        is Resource.Success -> {
+                            bestDealsAdapter.differ.submitList(it.data)
+                            hideLoading()
+                        }
+                        is Resource.Error -> {
+                            hideLoading()
+                            Log.e("TAG", it.message.toString())
+                            Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                        }
+                        else -> Unit
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.bestProducts.collectLatest {
+                    when (it) {
+                        is Resource.Loading -> {
+                            binding.bestProductsProgressbar.visibility = View.VISIBLE
+                        }
+                        is Resource.Success -> {
+                            bestProductsAdapter.differ.submitList(it.data)
+                            binding.bestProductsProgressbar.visibility = View.GONE
+
+
+                        }
+                        is Resource.Error -> {
+                            Log.e("TAG", it.message.toString())
+                            Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                            binding.bestProductsProgressbar.visibility = View.GONE
+
+                        }
+                        else -> Unit
+                    }
+                }
+            }
+        }
     }
 
     private fun showLoading() {
@@ -75,11 +136,27 @@ class MainCategoryFragment : Fragment(R.layout.fragment_main_category) {
     }
 
     private fun setupSpecialProductsRv() {
-        specialProductsAdapter = SpecialProductsAdapter()
         binding.rvSpecialProducts.apply {
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = specialProductsAdapter
         }
     }
+
+    private fun setupBestDealsRv() {
+        binding.rvBestDealsProducts.apply {
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = bestDealsAdapter
+        }
+    }
+
+    private fun setupBestProducts() {
+        binding.rvBestProducts.apply {
+            layoutManager =
+                GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
+            adapter = bestProductsAdapter
+        }
+    }
+
 }

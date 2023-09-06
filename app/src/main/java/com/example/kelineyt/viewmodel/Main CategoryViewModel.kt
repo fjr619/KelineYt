@@ -19,8 +19,17 @@ class MainCategoryViewModel @Inject constructor(
     private val _specialProducts = MutableStateFlow<Resource<List<Product>>>(Resource.Unspecified())
     val specialProducts = _specialProducts.asStateFlow()
 
+    private val _bestDealsProducts =
+        MutableStateFlow<Resource<List<Product>>>(Resource.Unspecified())
+    val bestDealsProducts = _bestDealsProducts.asStateFlow()
+
+    private val _bestProducts = MutableStateFlow<Resource<List<Product>>>(Resource.Unspecified())
+    val bestProducts = _bestProducts.asStateFlow()
+
     init {
         fetchSpecialProducts()
+        fetchBestDeals()
+        fetchBestProducts()
     }
 
     fun fetchSpecialProducts() {
@@ -36,6 +45,40 @@ class MainCategoryViewModel @Inject constructor(
             }.addOnFailureListener {
                 viewModelScope.launch {
                     _specialProducts.emit(Resource.Error(it.message.toString()))
+                }
+            }
+    }
+
+    fun fetchBestDeals() {
+        viewModelScope.launch {
+            _bestDealsProducts.emit(Resource.Loading())
+        }
+        firestore.collection("Products").whereEqualTo("category", "Best Deals").get()
+            .addOnSuccessListener { result ->
+                val bestDealsProducts = result.toObjects(Product::class.java)
+                viewModelScope.launch {
+                    _bestDealsProducts.emit(Resource.Success(bestDealsProducts))
+                }
+            }.addOnFailureListener {
+                viewModelScope.launch {
+                    _bestDealsProducts.emit(Resource.Error(it.message.toString()))
+                }
+            }
+    }
+
+    fun fetchBestProducts() {
+        viewModelScope.launch {
+            _bestProducts.emit(Resource.Loading())
+        }
+        firestore.collection("Products").get()
+            .addOnSuccessListener { result ->
+                val bestProducts = result.toObjects(Product::class.java)
+                viewModelScope.launch {
+                    _bestProducts.emit(Resource.Success(bestProducts))
+                }
+            }.addOnFailureListener {
+                viewModelScope.launch {
+                    _bestProducts.emit(Resource.Error(it.message.toString()))
                 }
             }
     }
