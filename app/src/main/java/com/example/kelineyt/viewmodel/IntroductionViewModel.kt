@@ -1,11 +1,8 @@
 package com.example.kelineyt.viewmodel
 
-import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.kelineyt.R
-import com.example.kelineyt.util.Constant
 import com.example.kelineyt.util.Constant.INTRODUCTION_KEY
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,13 +20,13 @@ class IntroductionViewModel @Inject constructor(
     private val _navigate = MutableStateFlow(0)
     val navigate = _navigate.asStateFlow()
 
-    companion object{
+    companion object {
         const val SHOPPING_ACTIVITY = 1
         const val ACCOUNT_OPTIONS_FRAGMENT = 2
     }
 
     init {
-        val isButtonClicked = sharedPreferences.getBoolean(INTRODUCTION_KEY,false)
+        val isButtonClicked = sharedPreferences.getBoolean(INTRODUCTION_KEY, false)
         val user = firebaseAuth.currentUser
 
         viewModelScope.launch {
@@ -46,6 +43,6 @@ class IntroductionViewModel @Inject constructor(
     }
 
     fun startButtonClick() {
-        sharedPreferences.edit().putBoolean(INTRODUCTION_KEY,true).apply()
+        sharedPreferences.edit().putBoolean(INTRODUCTION_KEY, true).apply()
     }
 }
