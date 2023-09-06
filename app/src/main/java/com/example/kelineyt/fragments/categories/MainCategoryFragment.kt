@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -41,9 +42,7 @@ class MainCategoryFragment : Fragment(R.layout.fragment_main_category) {
     private val viewModel by viewModels<MainCategoryViewModel>()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentMainCategoryBinding.inflate(inflater)
         return binding.root
@@ -51,28 +50,37 @@ class MainCategoryFragment : Fragment(R.layout.fragment_main_category) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("TAG","onViewCreated")
+        Log.d("TAG", "onViewCreated")
         setupSpecialProductsRv()
         setupBestDealsRv()
         setupBestProducts()
 
+        binding.nestedScrollMainCategory.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, _ ->
+            if (v.getChildAt(0).bottom <= v.height + scrollY) {
+                viewModel.fetchBestProducts()
+            }
+        })
+
         viewLifecycleOwner.lifecycleScope.launch() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.specialProducts.collectLatest {
-                    when(it) {
+                    when (it) {
                         is Resource.Loading -> {
                             showLoading()
                         }
+
                         is Resource.Success -> {
                             Log.e("TAG", "Resource.Success")
                             specialProductsAdapter.differ.submitList(it.data)
                             hideLoading()
                         }
+
                         is Resource.Error -> {
                             hideLoading()
                             Log.e("TAG", it.message.toString())
                             Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                         }
+
                         else -> Unit
                     }
                 }
@@ -86,15 +94,18 @@ class MainCategoryFragment : Fragment(R.layout.fragment_main_category) {
                         is Resource.Loading -> {
                             showLoading()
                         }
+
                         is Resource.Success -> {
                             bestDealsAdapter.differ.submitList(it.data)
                             hideLoading()
                         }
+
                         is Resource.Error -> {
                             hideLoading()
                             Log.e("TAG", it.message.toString())
                             Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                         }
+
                         else -> Unit
                     }
                 }
@@ -108,18 +119,21 @@ class MainCategoryFragment : Fragment(R.layout.fragment_main_category) {
                         is Resource.Loading -> {
                             binding.bestProductsProgressbar.visibility = View.VISIBLE
                         }
+
                         is Resource.Success -> {
                             bestProductsAdapter.differ.submitList(it.data)
                             binding.bestProductsProgressbar.visibility = View.GONE
 
 
                         }
+
                         is Resource.Error -> {
                             Log.e("TAG", it.message.toString())
                             Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                             binding.bestProductsProgressbar.visibility = View.GONE
 
                         }
+
                         else -> Unit
                     }
                 }
