@@ -44,7 +44,7 @@ class ProductDetailFragment: Fragment(R.layout.fragment_product_details) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-//        hideBottomNavigationView()
+        hideBottomNavigationView()
         binding = FragmentProductDetailsBinding.inflate(inflater)
         return binding.root
     }
@@ -116,6 +116,7 @@ class ProductDetailFragment: Fragment(R.layout.fragment_product_details) {
 
                         is Resource.Success -> {
                             binding.buttonAddToCart.revertAnimation()
+                            viewModel.showSnackbar("Berhasil menambahkan barang")
                         }
 
                         is Resource.Error -> {
@@ -124,6 +125,14 @@ class ProductDetailFragment: Fragment(R.layout.fragment_product_details) {
                         }
                         else -> Unit
                     }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch() {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.snackbar.collectLatest {
+                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
                 }
             }
         }

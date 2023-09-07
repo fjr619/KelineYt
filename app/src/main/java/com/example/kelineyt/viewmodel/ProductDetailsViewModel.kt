@@ -10,7 +10,9 @@ import com.example.kelineyt.util.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,6 +31,9 @@ class ProductDetailsViewModel @Inject constructor(
 
     private val _addToCart = MutableStateFlow<Resource<CartProduct>>(Resource.Unspecified())
     val addToCart = _addToCart.asStateFlow()
+
+    private val _snackbar = MutableSharedFlow<String>()
+    val snackbar = _snackbar.asSharedFlow()
 
     fun setSelectionColor(color: Int?) {
         viewModelScope.launch {
@@ -90,6 +95,12 @@ class ProductDetailsViewModel @Inject constructor(
                 } else
                     _addToCart.emit(Resource.Error(e.message.toString()))
             }
+        }
+    }
+
+    fun showSnackbar(msg: String) {
+        viewModelScope.launch {
+            _snackbar.emit(msg)
         }
     }
 }
