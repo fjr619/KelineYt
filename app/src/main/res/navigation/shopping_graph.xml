@@ -62,6 +62,9 @@
             <action
                 android:id="@+id/action_cartFragment_to_productDetailsFragment"
                 app:destination="@id/productDetailsFragment" />
+<!--            <action-->
+<!--                android:id="@+id/action_cartFragment_to_billingFragment2"-->
+<!--                app:destination="@id/billingFragment" />-->
         </fragment>
 
         <fragment
@@ -72,6 +75,18 @@
             <argument
                 android:name="product"
                 app:argType="com.example.kelineyt.data.Product" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/addressFragment"
+            android:name="com.example.kelineyt.fragments.shopping.AddressFragment"
+            android:label="AddressFragment"
+            tools:layout="@layout/fragment_address">
+            <argument
+                android:name="address"
+                app:argType="com.example.kelineyt.data.Address"
+                app:nullable="true"
+                android:defaultValue="@null" />
         </fragment>
     </navigation>
 
@@ -92,18 +107,6 @@
         <!--            app:destination="@id/billingFragment" />-->
     </fragment>
 
-
-    <!--    <fragment-->
-    <!--        android:id="@+id/addressFragment"-->
-    <!--        android:name="com.example.kelineyt.fragments.shopping.AddressFragment"-->
-    <!--        android:label="AddressFragment"-->
-    <!--        tools:layout="@layout/fragment_address">-->
-    <!--        <argument-->
-    <!--            android:name="address"-->
-    <!--            app:argType="com.example.kelineyt.data.Address"-->
-    <!--            app:nullable="true"-->
-    <!--            android:defaultValue="@null" />-->
-    <!--    </fragment>-->
     <!--    <fragment-->
     <!--        android:id="@+id/billingFragment"-->
     <!--        android:name="com.example.kelineyt.fragments.shopping.BillingFragment"-->

@@ -12,9 +12,11 @@
         android:theme="@style/Theme.KelineYt" >
         <activity
             android:name=".activities.ShoppingActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".activities.LoginRegisterActivity"
+            android:screenOrientation="portrait"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
