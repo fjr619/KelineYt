@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -19,7 +20,9 @@ import com.example.kelineyt.activities.ShoppingActivity
 import com.example.kelineyt.adapters.ProductColorsAdapter
 import com.example.kelineyt.adapters.ProductImagesAdapter
 import com.example.kelineyt.adapters.ProductSizesAdapter
+import com.example.kelineyt.data.CartProduct
 import com.example.kelineyt.databinding.FragmentProductDetailsBinding
+import com.example.kelineyt.util.Resource
 import com.example.kelineyt.util.hideBottomNavigationView
 import com.example.kelineyt.viewmodel.ProductDetailsViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -35,15 +38,13 @@ class ProductDetailFragment: Fragment(R.layout.fragment_product_details) {
     private val sizesAdapter by lazy { ProductSizesAdapter() }
     private val colorsAdapter by lazy { ProductColorsAdapter() }
     private val viewModel by viewModels<ProductDetailsViewModel>()
-    private var selectedColor: Int? = null
-    private var selectedSize: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        hideBottomNavigationView()
+//        hideBottomNavigationView()
         binding = FragmentProductDetailsBinding.inflate(inflater)
         return binding.root
     }
@@ -74,17 +75,19 @@ class ProductDetailFragment: Fragment(R.layout.fragment_product_details) {
         product.sizes?.let { sizesAdapter.differ.submitList(it) }
 
         sizesAdapter.onItemClick = {
-            selectedSize = it
-            viewModel.setSelectionSize(selectedSize)
+            viewModel.setSelectionSize(it)
         }
 
         colorsAdapter.onItemClick = {
-            selectedColor = it
-            viewModel.setSelectionColor(selectedColor)
+            viewModel.setSelectionColor(it)
         }
 
         binding.imageClose.setOnClickListener {
-            findNavController().navigateUp()
+            findNavController().popBackStack()
+        }
+
+        binding.buttonAddToCart.setOnClickListener {
+            viewModel.addUpdateProductInCart(product)
         }
 
         viewLifecycleOwner.lifecycleScope.launch() {
@@ -99,6 +102,28 @@ class ProductDetailFragment: Fragment(R.layout.fragment_product_details) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.selectionSize.collectLatest {
                     sizesAdapter.setSelection(it)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch() {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.addToCart.collectLatest {
+                    when (it) {
+                        is Resource.Loading -> {
+                            binding.buttonAddToCart.startAnimation()
+                        }
+
+                        is Resource.Success -> {
+                            binding.buttonAddToCart.revertAnimation()
+                        }
+
+                        is Resource.Error -> {
+                            binding.buttonAddToCart.stopAnimation()
+                            Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                        }
+                        else -> Unit
+                    }
                 }
             }
         }
