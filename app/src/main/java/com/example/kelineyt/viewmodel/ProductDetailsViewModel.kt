@@ -90,7 +90,6 @@ class ProductDetailsViewModel @Inject constructor(
         firebaseCommon.increaseQuantity(documentId) { increasedProduct, e ->
             viewModelScope.launch {
                 if (e == null) {
-                    Log.d("TAG","new quantity = ${increasedProduct?.quantity}")
                     _addToCart.emit(Resource.Success(increasedProduct))
                 } else
                     _addToCart.emit(Resource.Error(e.message.toString()))

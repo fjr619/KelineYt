@@ -68,12 +68,10 @@ class RegisterFragment: Fragment() {
                             isEnabledForm(false)
                         }
                         is Resource.Success -> {
-                            Log.d("test","success ${it.data?.email}")
                             binding.buttonRegisterRegister.revertAnimation()
                             isEnabledForm(true)
                         }
                         is Resource.Error -> {
-                            Log.d("test","error ${it.message.toString()}")
                             binding.buttonRegisterRegister.revertAnimation()
                             isEnabledForm(true)
                         }

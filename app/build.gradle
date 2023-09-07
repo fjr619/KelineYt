@@ -57,8 +57,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     //Navigation component
-    implementation "androidx.navigation:navigation-fragment-ktx:2.7.2"
-    implementation "androidx.navigation:navigation-ui-ktx:2.7.2"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.7.1"
+    implementation "androidx.navigation:navigation-ui-ktx:2.7.1"
 
     //loading button
     implementation 'br.com.simplepass:loading-button-android:2.2.0'
@@ -76,7 +76,7 @@ dependencies {
     implementation 'com.shuhart.stepview:stepview:1.5.1'
 
     //Android Ktx
-    implementation "androidx.fragment:fragment-ktx:1.5.7"
+//    implementation "androidx.fragment:fragment-ktx:1.5.7"
 
     //Dagger hilt
     implementation "com.google.dagger:hilt-android:2.47"
