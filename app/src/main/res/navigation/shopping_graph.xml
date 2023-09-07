@@ -62,9 +62,9 @@
             <action
                 android:id="@+id/action_cartFragment_to_productDetailsFragment"
                 app:destination="@id/productDetailsFragment" />
-<!--            <action-->
-<!--                android:id="@+id/action_cartFragment_to_billingFragment2"-->
-<!--                app:destination="@id/billingFragment" />-->
+            <action
+                android:id="@+id/action_cartFragment_to_billingFragment2"
+                app:destination="@id/billingFragment" />
         </fragment>
 
         <fragment
@@ -78,15 +78,34 @@
         </fragment>
 
         <fragment
+            android:id="@+id/billingFragment"
+            android:name="com.example.kelineyt.fragments.shopping.BillingFragment"
+            android:label="BillingFragment"
+            tools:layout="@layout/fragment_billing">
+            <action
+                android:id="@+id/action_billingFragment_to_addressFragment"
+                app:destination="@id/addressFragment" />
+            <argument
+                android:name="totalPrice"
+                app:argType="float" />
+            <argument
+                android:name="products"
+                app:argType="com.example.kelineyt.data.CartProduct[]" />
+<!--            <argument-->
+<!--                android:name="payment"-->
+<!--                app:argType="boolean" />-->
+        </fragment>
+
+        <fragment
             android:id="@+id/addressFragment"
             android:name="com.example.kelineyt.fragments.shopping.AddressFragment"
             android:label="AddressFragment"
             tools:layout="@layout/fragment_address">
             <argument
                 android:name="address"
+                android:defaultValue="@null"
                 app:argType="com.example.kelineyt.data.Address"
-                app:nullable="true"
-                android:defaultValue="@null" />
+                app:nullable="true" />
         </fragment>
     </navigation>
 
@@ -107,24 +126,7 @@
         <!--            app:destination="@id/billingFragment" />-->
     </fragment>
 
-    <!--    <fragment-->
-    <!--        android:id="@+id/billingFragment"-->
-    <!--        android:name="com.example.kelineyt.fragments.shopping.BillingFragment"-->
-    <!--        android:label="BillingFragment"-->
-    <!--        tools:layout="@layout/fragment_billing">-->
-    <!--        <action-->
-    <!--            android:id="@+id/action_billingFragment_to_addressFragment"-->
-    <!--            app:destination="@id/addressFragment" />-->
-    <!--        <argument-->
-    <!--            android:name="totalPrice"-->
-    <!--            app:argType="float" />-->
-    <!--        <argument-->
-    <!--            android:name="products"-->
-    <!--            app:argType="com.example.kelineyt.data.CartProduct[]" />-->
-    <!--        <argument-->
-    <!--            android:name="payment"-->
-    <!--            app:argType="boolean" />-->
-    <!--    </fragment>-->
+
     <!--    <fragment-->
     <!--        android:id="@+id/userAccountFragment"-->
     <!--        android:name="com.example.kelineyt.fragments.settings.UserAccountFragment"-->

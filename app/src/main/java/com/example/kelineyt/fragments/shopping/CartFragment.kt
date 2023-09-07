@@ -30,6 +30,7 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
     private lateinit var binding: FragmentCartBinding
     private val cartAdapter by lazy { CartProductAdapter() }
     private val viewModel by activityViewModels<CartViewModel>()
+    private var totalPrice: Float = 0f
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,11 +61,20 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
             findNavController().navigate(R.id.action_cartFragment_to_productDetailsFragment, b)
         }
 
+        binding.buttonCheckout.setOnClickListener {
+            val action = CartFragmentDirections.actionCartFragmentToBillingFragment2(
+                totalPrice,
+                cartAdapter.differ.currentList.toTypedArray()
+            )
+            findNavController().navigate(action)
+        }
+
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.productsPrice.collectLatest { price ->
                     price?.let {
-                        binding.tvTotalPrice.text = "$ $price"
+                        totalPrice = it
+                        binding.tvTotalPrice.text = "$ $it"
                     }
                 }
             }

@@ -15,6 +15,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.kelineyt.data.Address
 import com.example.kelineyt.databinding.FragmentAddressBinding
 import com.example.kelineyt.util.Resource
+import com.example.kelineyt.util.hideBottomNavigationView
 import com.example.kelineyt.viewmodel.AddressViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -34,12 +35,31 @@ class AddressFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        hideBottomNavigationView()
         binding = FragmentAddressBinding.inflate(inflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val address = args.address
+        if (address == null) {
+            binding.buttonDelelte.visibility = View.GONE
+        } else {
+            binding.apply {
+                edAddressTitle.setText(address.addressTitle)
+                edFullName.setText(address.fullName)
+                edState.setText(address.street)
+                edPhone.setText(address.phone)
+                edCity.setText(address.city)
+                edState.setText(address.state)
+            }
+        }
+
+        binding.imageAddressClose.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         binding.apply {
             buttonSave.setOnClickListener {
