@@ -66,4 +66,11 @@ class ProductSizesAdapter : RecyclerView.Adapter<ProductSizesAdapter.SizesViewHo
     }
 
     var onItemClick: ((String) -> Unit)? = null
+
+    fun setSelection(sise: String?) {
+        sise?.let {
+            selectedPosition = differ.currentList.indexOf(it)
+            notifyItemChanged(selectedPosition)
+        }
+    }
 }

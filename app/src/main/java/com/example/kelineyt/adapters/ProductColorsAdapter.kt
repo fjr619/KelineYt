@@ -1,6 +1,7 @@
 package com.example.kelineyt.adapters
 
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,4 +72,10 @@ class ProductColorsAdapter : RecyclerView.Adapter<ProductColorsAdapter.ColorsVie
     }
 
     var onItemClick: ((Int) -> Unit)? = null
+    fun setSelection(color: Int?) {
+        color?.let {
+            selectedPosition = differ.currentList.indexOf(it)
+            notifyItemChanged(selectedPosition)
+        }
+    }
 }

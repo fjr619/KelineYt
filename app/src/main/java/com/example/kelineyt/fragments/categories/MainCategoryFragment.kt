@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kelineyt.R
@@ -20,6 +21,7 @@ import com.example.kelineyt.adapters.BestProductsAdapter
 import com.example.kelineyt.adapters.SpecialProductsAdapter
 import com.example.kelineyt.databinding.FragmentMainCategoryBinding
 import com.example.kelineyt.util.Resource
+import com.example.kelineyt.util.showBottomNavigationView
 import com.example.kelineyt.viewmodel.MainCategoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -60,6 +62,27 @@ class MainCategoryFragment : Fragment(R.layout.fragment_main_category) {
                 viewModel.fetchBestProducts()
             }
         })
+
+        specialProductsAdapter.onClick = {
+            val b = Bundle().apply {
+                putParcelable("product", it)
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment, b)
+        }
+
+        bestDealsAdapter.onClick = {
+            val b = Bundle().apply {
+                putParcelable("product", it)
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment, b)
+        }
+
+        bestProductsAdapter.onClick = {
+            val b = Bundle().apply {
+                putParcelable("product", it)
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment, b)
+        }
 
         viewLifecycleOwner.lifecycleScope.launch() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -173,4 +196,8 @@ class MainCategoryFragment : Fragment(R.layout.fragment_main_category) {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        showBottomNavigationView()
+    }
 }

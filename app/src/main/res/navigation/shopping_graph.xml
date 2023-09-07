@@ -3,40 +3,81 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/shopping_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/homeNavigation">
 
-    <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.example.kelineyt.fragments.shopping.HomeFragment"
-        android:label="HomeFragment"
-        tools:layout="@layout/fragment_home">
-<!--        <action-->
-<!--            android:id="@+id/action_homeFragment_to_productDetailsFragment"-->
-<!--            app:destination="@id/productDetailsFragment" />-->
-    </fragment>
-    <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.example.kelineyt.fragments.shopping.SearchFragment"
-        android:label="SearchFragment"
-        tools:layout="@layout/fragment_search">
-<!--        <action-->
-<!--            android:id="@+id/action_searchFragment_to_productDetailsFragment"-->
-<!--            app:destination="@id/productDetailsFragment" />-->
-    </fragment>
-    <fragment
-        android:id="@+id/cartFragment"
-        android:name="com.example.kelineyt.fragments.shopping.CartFragment"
-        android:label="CartFragment"
-        tools:layout="@layout/fragment_cart">
-<!--        <action-->
-<!--            android:id="@+id/action_cartFragment_to_productDetailsFragment"-->
-<!--            app:destination="@id/productDetailsFragment" />-->
+    <navigation android:id="@+id/homeNavigation"
+        app:startDestination="@id/homeFragment">
+        <fragment
+            android:id="@+id/homeFragment"
+            android:name="com.example.kelineyt.fragments.shopping.HomeFragment"
+            android:label="HomeFragment"
+            tools:layout="@layout/fragment_home">
+            <action
+                android:id="@+id/action_homeFragment_to_productDetailsFragment"
+                app:destination="@id/productDetailsFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/productDetailsFragment"
+            android:name="com.example.kelineyt.fragments.shopping.ProductDetailFragment"
+            android:label="ProductDetailsFragment"
+            tools:layout="@layout/fragment_product_details">
+            <argument
+                android:name="product"
+                app:argType="com.example.kelineyt.data.Product" />
+        </fragment>
+    </navigation>
 
-<!-- />-->
-<!--        <action-->
-<!--            android:id="@+id/action_cartFragment_to_billingFragment2"-->
-<!--            app:destination="@id/billingFragment" />-->
-    </fragment>
+    <navigation android:id="@+id/searchNavigation"
+        app:startDestination="@id/searchFragment">
+        <fragment
+            android:id="@+id/searchFragment"
+            android:name="com.example.kelineyt.fragments.shopping.SearchFragment"
+            android:label="SearchFragment"
+            tools:layout="@layout/fragment_search">
+            <action
+                android:id="@+id/action_homeFragment_to_productDetailsFragment"
+                app:destination="@id/productDetailsFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/productDetailsFragment"
+            android:name="com.example.kelineyt.fragments.shopping.ProductDetailFragment"
+            android:label="ProductDetailsFragment"
+            tools:layout="@layout/fragment_product_details">
+            <argument
+                android:name="product"
+                app:argType="com.example.kelineyt.data.Product" />
+        </fragment>
+    </navigation>
+
+    <navigation android:id="@+id/cartNavigation"
+        app:startDestination="@id/cartFragment">
+        <fragment
+            android:id="@+id/cartFragment"
+            android:name="com.example.kelineyt.fragments.shopping.CartFragment"
+            android:label="CartFragment"
+            tools:layout="@layout/fragment_cart">
+            <action
+                android:id="@+id/action_homeFragment_to_productDetailsFragment"
+                app:destination="@id/productDetailsFragment" />
+
+            <!-- />-->
+            <!--        <action-->
+            <!--            android:id="@+id/action_cartFragment_to_billingFragment2"-->
+            <!--            app:destination="@id/billingFragment" />-->
+
+            <fragment
+                android:id="@+id/productDetailsFragment"
+                android:name="com.example.kelineyt.fragments.shopping.ProductDetailFragment"
+                android:label="ProductDetailsFragment"
+                tools:layout="@layout/fragment_product_details">
+                <argument
+                    android:name="product"
+                    app:argType="com.example.kelineyt.data.Product" />
+            </fragment>
+        </fragment>
+    </navigation>
+
+
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.kelineyt.fragments.shopping.ProfileFragment"
@@ -53,16 +94,8 @@
 <!--            app:destination="@id/billingFragment" />-->
     </fragment>
 
-<!--    <fragment-->
-<!--        android:id="@+id/productDetailsFragment"-->
-<!--        android:name="com.example.kelineyt.fragments.shopping.ProductDetailsFragment"-->
-<!--        android:label="ProductDetailsFragment"-->
-<!--        tools:layout="@layout/fragment_product_details">-->
-<!--        <argument-->
-<!--            android:name="product"-->
-<!--            app:argType="com.example.kelineyt.data.Product" />-->
-<!--    </fragment>-->
-<!--    <fragment-->
+
+    <!--    <fragment-->
 <!--        android:id="@+id/addressFragment"-->
 <!--        android:name="com.example.kelineyt.fragments.shopping.AddressFragment"-->
 <!--        android:label="AddressFragment"-->
