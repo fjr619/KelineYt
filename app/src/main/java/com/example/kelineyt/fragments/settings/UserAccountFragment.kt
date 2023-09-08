@@ -51,7 +51,7 @@ class UserAccountFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        hideUserLoading()
+//        hideUserLoading()
         binding = FragmentUserAccountBinding.inflate(inflater)
         return binding.root
     }

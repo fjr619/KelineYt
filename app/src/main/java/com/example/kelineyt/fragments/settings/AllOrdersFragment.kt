@@ -72,8 +72,8 @@ class AllOrdersFragment : Fragment() {
         }
 
         ordersAdapter.onClick = {
-//            val action = AllOrdersFragmentDirections.actionOrdersFragmentToOrderDetailFragment(it)
-//            findNavController().navigate(action)
+            val action = AllOrdersFragmentDirections.actionOrdersFragmentToOrderDetailFragment(it)
+            findNavController().navigate(action)
         }
 
     }
