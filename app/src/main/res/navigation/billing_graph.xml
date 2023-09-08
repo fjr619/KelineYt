@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/billingGraph"
+    app:startDestination="@id/billingFragment">
+
+    <fragment
+        android:id="@+id/billingFragment"
+        android:name="com.example.kelineyt.fragments.shopping.BillingFragment"
+        android:label="BillingFragment"
+        tools:layout="@layout/fragment_billing">
+        <action
+            android:id="@+id/action_billingFragment_to_addressFragment"
+            app:destination="@id/addressFragment" />
+        <argument
+            android:name="totalPrice"
+            app:argType="float" />
+        <argument
+            android:name="products"
+            app:argType="com.example.kelineyt.data.CartProduct[]" />
+        <!--            <argument-->
+        <!--                android:name="payment"-->
+        <!--                app:argType="boolean" />-->
+    </fragment>
+
+    <fragment
+        android:id="@+id/addressFragment"
+        android:name="com.example.kelineyt.fragments.shopping.AddressFragment"
+        android:label="AddressFragment"
+        tools:layout="@layout/fragment_address">
+        <argument
+            android:name="address"
+            android:defaultValue="@null"
+            app:argType="com.example.kelineyt.data.Address"
+            app:nullable="true" />
+    </fragment>
+
+</navigation>

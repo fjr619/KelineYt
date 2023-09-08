@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cartNavigation"
+    app:startDestination="@id/cartFragment">
+
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.kelineyt.fragments.shopping.CartFragment"
+        android:label="CartFragment"
+        tools:layout="@layout/fragment_cart">
+        <action
+            android:id="@+id/action_cartFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailGraph">
+            <argument
+                android:name="product"
+                app:argType="com.example.kelineyt.data.Product" />
+        </action>
+        <action
+            android:id="@+id/action_cartFragment_to_billingFragment2"
+            app:destination="@id/billingGraph">
+
+            <argument
+                android:name="totalPrice"
+                app:argType="float" />
+            <argument
+                android:name="products"
+                app:argType="com.example.kelineyt.data.CartProduct[]" />
+
+        </action>
+    </fragment>
+
+    <include app:graph = "@navigation/product_detail_graph"/>
+    <include app:graph="@navigation/billing_graph"/>
+</navigation>
