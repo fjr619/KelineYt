@@ -1,5 +1,6 @@
 package com.example.kelineyt.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kelineyt.data.Address
@@ -33,8 +34,18 @@ class BillingViewModel @Inject constructor(
                     viewModelScope.launch { _address.emit(Resource.Error(error.message.toString())) }
                     return@addSnapshotListener
                 }
-                val addresses = value?.toObjects(Address::class.java)
-                viewModelScope.launch { _address.emit(Resource.Success(addresses!!)) }
+
+                val addresses = mutableListOf<Address>()
+
+                value?.documents?.forEach { docSnap ->
+                    val address = docSnap.toObject(Address::class.java)
+                    address?.let {
+                        it.id = docSnap.id
+                        addresses.add(it)
+                    }
+                }
+
+                viewModelScope.launch { _address.emit(Resource.Success(addresses)) }
             }
     }
 }

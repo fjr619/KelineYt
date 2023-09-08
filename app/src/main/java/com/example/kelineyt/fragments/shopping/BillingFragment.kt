@@ -91,7 +91,6 @@ class BillingFragment : Fragment() {
         addressAdapter.onClick = {
             selectedAddress = it
             if (!args.payment) {
-                Log.e("TAG", "$selectedAddress")
                 val b = Bundle().apply { putParcelable("address", selectedAddress) }
                 findNavController().navigate(R.id.action_billingFragment_to_addressFragment, b)
             }

@@ -1,6 +1,7 @@
 package com.example.kelineyt.fragments.shopping
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,7 +70,15 @@ class AddressFragment : Fragment() {
                 val phone = edPhone.text.toString()
                 val city = edCity.text.toString()
                 val state = edState.text.toString()
-                val address = Address(addressTitle, fullName, street, phone, city, state)
+                val address = Address(id = address?.let {
+                    it.id
+                } ?: "",
+                    addressTitle = addressTitle,
+                    fullName = fullName,
+                    street = street,
+                    phone = phone,
+                    city = city,
+                    state = state)
 
                 viewModel.addAddress(address)
             }

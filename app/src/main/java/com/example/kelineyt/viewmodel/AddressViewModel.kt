@@ -32,8 +32,14 @@ class AddressViewModel @Inject constructor(
 
         if (validateInputs) {
             viewModelScope.launch { _addNewAddress.emit(Resource.Loading()) }
-            firestore.collection("user").document(auth.uid!!).collection("address").document()
-                .set(address).addOnSuccessListener {
+
+            val docRef = if (address.id.isNotEmpty()) {
+                firestore.collection("user").document(auth.uid!!).collection("address").document(address.id)
+            } else {
+                firestore.collection("user").document(auth.uid!!).collection("address").document()
+            }
+
+            docRef.set(address).addOnSuccessListener {
                     viewModelScope.launch { _addNewAddress.emit(Resource.Success(address)) }
                 }.addOnFailureListener {
                     viewModelScope.launch { _addNewAddress.emit(Resource.Error(it.message.toString())) }
