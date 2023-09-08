@@ -30,15 +30,17 @@ class AllOrdersViewModel @Inject constructor(
             _allOrders.emit(Resource.Loading())
         }
 
-        firestore.collection("user").document(auth.uid!!).collection("orders").get()
-            .addOnSuccessListener {
-                val orders = it.toObjects(Order::class.java)
-                viewModelScope.launch {
-                    _allOrders.emit(Resource.Success(orders))
-                }
-            }.addOnFailureListener {
-                viewModelScope.launch {
-                    _allOrders.emit(Resource.Error(it.message.toString()))
+        firestore.collection("user").document(auth.uid!!).collection("orders")
+            .addSnapshotListener { value, error ->
+                if (error != null || value == null) {
+                    viewModelScope.launch {
+                        _allOrders.emit(Resource.Error(error?.message.toString()))
+                    }
+                } else {
+                    val orders = value.toObjects(Order::class.java)
+                    viewModelScope.launch {
+                        _allOrders.emit(Resource.Success(orders))
+                    }
                 }
             }
     }
