@@ -50,7 +50,7 @@ class AddressFragment : Fragment() {
             binding.apply {
                 edAddressTitle.setText(address.addressTitle)
                 edFullName.setText(address.fullName)
-                edState.setText(address.street)
+                edStreet.setText(address.street)
                 edPhone.setText(address.phone)
                 edCity.setText(address.city)
                 edState.setText(address.state)

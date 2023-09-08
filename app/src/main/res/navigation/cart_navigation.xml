@@ -27,6 +27,9 @@
             <argument
                 android:name="products"
                 app:argType="com.example.kelineyt.data.CartProduct[]" />
+            <argument
+                android:name="payment"
+                app:argType="boolean" />
 
         </action>
     </fragment>

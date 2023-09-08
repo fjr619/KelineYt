@@ -2,6 +2,7 @@ package com.example.kelineyt.fragments.shopping
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -70,6 +71,15 @@ class BillingFragment : Fragment() {
         billingProductsAdapter.differ.submitList(products)
         binding.tvTotalPrice.text = "$ $totalPrice"
 
+        if (!args.payment) {
+            binding.apply {
+                buttonPlaceOrder.visibility = View.INVISIBLE
+                totalBoxContainer.visibility = View.INVISIBLE
+                middleLine.visibility = View.INVISIBLE
+                bottomLine.visibility = View.INVISIBLE
+            }
+        }
+
         binding.imageCloseBilling.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -80,6 +90,11 @@ class BillingFragment : Fragment() {
 
         addressAdapter.onClick = {
             selectedAddress = it
+            if (!args.payment) {
+                Log.e("TAG", "$selectedAddress")
+                val b = Bundle().apply { putParcelable("address", selectedAddress) }
+                findNavController().navigate(R.id.action_billingFragment_to_addressFragment, b)
+            }
         }
 
         binding.buttonPlaceOrder.setOnClickListener {
